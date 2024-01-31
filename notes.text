@@ -1,0 +1,48 @@
+//Selected student record
+const selectedStudent = async (req, res) => {
+  try {
+    const { name, email, phone, address, percentage } = req.body;
+    const newStudent = new Student({ name, email, phone, address, percentage });
+    await newStudent.save();
+    res.status(201).json({
+      status: true,
+      message: 'Student details created successfully',
+    });
+  } catch (error) {
+    console.error('Error creating student details:', error);
+    res.status(500).json({
+      status: false,
+      message: 'Internal Server Error',
+      error: error.message,
+    });
+  }
+};
+
+//Update the selected students
+const selectedStudentsUpdate = async () => {
+  try {
+    const studentId = req.params.id;
+    const { email, phone, address, percentage } = req.body;
+    await Student.findByIdAndUpdate(
+      studentId,
+      {
+        email,
+        phone,
+        address,
+        percentage,
+      },
+      { new: true }
+    );
+    res.status(200).json({
+      status: true,
+      message: 'Student details updated successfully',
+    });
+  } catch (error) {
+    console.error('Error updating student details:', error);
+    res.status(500).json({
+      status: false,
+      message: 'Internal Server Error',
+      error: error.message,
+    });
+  }
+};
