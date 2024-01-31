@@ -6,9 +6,9 @@ const {
   editStudentDetails,
   studentDelete,
   lookupStudent,
-  // selectedStudent,
-  // selectedStudentsUpdate,
   studentDetails,
+  updateSelectedStudent,
+  selectedStudentDelete,
 } = require('../Controller/StudentForm');
 
 const router = express.Router();
@@ -22,8 +22,7 @@ router.route('/studentDelete/:id').delete(studentDelete);
 //Selected student api
 router.route('/lookup').get(lookupStudent);
 router.route('/student/:id').get(studentDetails);
-
-// router.route('/slectedStudentapi').post(selectedStudent);
-// router.put('/selectedStudentUpdate/:id'), (selectedStudentsUpdate);
+router.route('/studentUpdate/:id').put(updateSelectedStudent);
+router.route('/selectedStudentDelete/:id').delete(selectedStudentDelete);
 
 module.exports = router;

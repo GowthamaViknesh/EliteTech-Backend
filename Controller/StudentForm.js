@@ -50,7 +50,7 @@ const studentRegister = async (req, res) => {
 
       var mailOptions = {
         from: 'gowthampostbox30@gmail.com',
-        to: email, // Use the 'email' variable here
+        to: email,
         subject: 'Registration Successful',
         text: `Thanks for your registration! Your interview will be scheduled on ${interviewDate.toDateString()}`,
       };
@@ -150,7 +150,10 @@ const studentDelete = async (req, res) => {
 //Lookup Api
 const lookupStudent = async (req, res) => {
   try {
-    const studentNames = await Student.find({}, 'name');
+    const studentNames = await Student.find(
+      { percentage: { $gte: 70, $lt: 90 } },
+      'name'
+    );
     res.status(200).json({
       status: true,
       message: 'Student names fetched successfully',
@@ -201,13 +204,75 @@ const studentDetails = async (req, res) => {
   }
 };
 
+const updateSelectedStudent = async (req, res) => {
+  try {
+    const studentId = req.params.id;
+    const updatedDetails = req.body;
+    if (!mongoose.Types.ObjectId.isValid(studentId)) {
+      return res.status(400).json({
+        status: false,
+        message: 'Invalid student ID',
+      });
+    }
+    const updatedStudent = await Student.findByIdAndUpdate(
+      studentId,
+      updatedDetails,
+      { new: true }
+    );
+    if (!updatedStudent) {
+      return res.status(404).json({
+        status: false,
+        message: 'Student not found',
+      });
+    }
+    return res.status(200).json({
+      status: true,
+      message: 'Student details updated successfully',
+      updatedStudent,
+    });
+  } catch (error) {
+    console.error('Error during student update:', error);
+    return res.status(500).json({
+      status: false,
+      message: 'Internal Server Error',
+      error: error.message,
+    });
+  }
+};
+
+const selectedStudentDelete = async (req, res) => {
+  try {
+    const studentId = req.params.id;
+    const deletedStudent = await Student.findByIdAndDelete(studentId);
+
+    if (!deletedStudent) {
+      return res
+        .status(404)
+        .json({ status: false, message: 'Student not found' });
+    }
+
+    return res.status(200).json({
+      status: true,
+      message: 'Student deleted successfully',
+      deletedStudent,
+    });
+  } catch (error) {
+    console.error('Error during student deletion:', error);
+    return res.status(500).json({
+      status: false,
+      message: 'Internal Server Error',
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   studentRegister,
   studentDeatils,
   editStudentDetails,
   studentDelete,
-  // selectedStudent,
-  // selectedStudentsUpdate,
   lookupStudent,
   studentDetails,
+  updateSelectedStudent,
+  selectedStudentDelete,
 };
