@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(
   cors({
     origin:
-      'https://65bb184a75c389267cf47d6e--coruscating-bubblegum-623995.netlify.app/',
+      'https://65bb184a75c389267cf47d6e--coruscating-bubblegum-623995.netlify.app',
   })
 );
 
